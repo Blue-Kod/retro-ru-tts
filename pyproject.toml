@@ -29,7 +29,6 @@ dependencies = [
 [project.urls]
 Source = "https://github.com/Blue-Kod/retro-ru-tts"
 "Original repository" = "https://github.com/poretsky/ru_tts"
-"Original author" = "Igor Poretsky"
 
 [tool.setuptools.packages]
 find = {}
