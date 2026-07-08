@@ -252,6 +252,26 @@ _ENGLISH_PATTERNS: Dict[re.Pattern, str] = {
 
 _ENGLISH_WORD_RE = re.compile(r"(?<!\w)[a-zA-Z]{2,}(?:'[a-zA-Z]+)?(?!\w)")
 
+_LETTER_NAMES: Dict[str, str] = {
+    "А": "а", "Б": "бэ", "В": "вэ", "Г": "гэ", "Д": "дэ",
+    "Е": "е", "Ё": "ё", "Ж": "жэ", "З": "зэ", "И": "и",
+    "Й": "й", "К": "ка", "Л": "эл", "М": "эм", "Н": "эн",
+    "О": "о", "П": "пэ", "Р": "эр", "С": "эс", "Т": "тэ",
+    "У": "у", "Ф": "эф", "Х": "ха", "Ц": "цэ", "Ч": "че",
+    "Ш": "ша", "Щ": "ща", "Ъ": "твёрдый знак", "Ы": "ы",
+    "Ь": "мягкий знак", "Э": "э", "Ю": "ю", "Я": "я",
+    "A": "а", "B": "бэ", "C": "цэ", "D": "дэ", "E": "е",
+    "F": "эф", "G": "гэ", "H": "аш", "I": "и", "J": "йот",
+    "K": "ка", "L": "эл", "M": "эм", "N": "эн", "O": "о",
+    "P": "пэ", "Q": "ку", "R": "эр", "S": "эс", "T": "тэ",
+    "U": "у", "V": "вэ", "W": "дубль-вэ", "X": "икс", "Y": "игрек", "Z": "зэт",
+}
+_ABBREV_RE = re.compile(r"(?<!\w)([A-ZА-ЯЁ]{2,6})(?!\w)")
+
+def _expand_abbrev(m: re.Match) -> str:
+    word = m.group(1)
+    return " ".join(_LETTER_NAMES.get(ch, ch.lower()) for ch in word)
+
 _NUM_RE = re.compile(
     r"(?<!\w)(-?\d{1,3}(?:\s?\d{3})*(?:[.,]\d+)?)\s*([а-яёa-z]+)?(?!\w)",
     re.IGNORECASE
@@ -407,6 +427,8 @@ def normalize(text: str) -> str:
     text = _NUM_RE.sub(_expand_number, text)
 
     text = _ENGLISH_WORD_RE.sub(_handle_english, text)
+
+    text = _ABBREV_RE.sub(_expand_abbrev, text)
 
     text = _PUNCT_SPACE_RE.sub(r"\1", text)
     text = _PUNCT_LEAD_RE.sub(r"\1", text)
