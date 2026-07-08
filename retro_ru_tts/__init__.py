@@ -65,8 +65,8 @@ def _normalize_text(text):
         _norm = Normalizer(NormalizeOptions.tts())
         return _norm.normalize(text)
     except ImportError:
-        pass
-    return text.replace("\u0301", "").replace("+", "").strip()
+        from retro_ru_tts.normalizer import normalize as _fallback
+        return _fallback(text)
 
 
 def synthesize(text, speech_rate=100, voice_pitch=100, intonation=100,
