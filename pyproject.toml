@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retro-ru-tts"
+version = "1.0.0"
+description = "Retro Russian speech synthesizer (ru_tts) wrapped for Python"
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Loginov Andrey" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: C",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Intended Audience :: Developers",
+]
+
+dependencies = [
+    "ru-normalizr >= 0.2.0",
+]
+
+[project.urls]
+Source = "https://github.com/Blue-Kod/retro-ru-tts"
+"Original repository" = "https://github.com/poretsky/ru_tts"
+"Original author" = "Igor Poretsky"
+
+[tool.setuptools.packages]
+find = {}
