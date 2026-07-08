@@ -59,6 +59,16 @@ def _play_pcm(pcm_bytes):
             raise RuntimeError("Audio playback not supported on this platform")
 
 
+def _normalize_text(text):
+    try:
+        from ru_normalizr import NormalizeOptions, Normalizer
+        _norm = Normalizer(NormalizeOptions.tts())
+        return _norm.normalize(text)
+    except ImportError:
+        pass
+    return text.replace("\u0301", "").replace("+", "").strip()
+
+
 def synthesize(text, speech_rate=100, voice_pitch=100, intonation=100,
                general_gap_factor=100, comma_gap_factor=100,
                dot_gap_factor=100, semicolon_gap_factor=100,
@@ -84,16 +94,14 @@ def synthesize(text, speech_rate=100, voice_pitch=100, intonation=100,
                USE_ALTERNATIVE_VOICE (4) (default 3 = both separators)
         wave_buffer_size: internal buffer size (default 8192)
         play: if True, play audio through speakers (default True)
-        normalize: if True, normalize text via ru-normalizr (TTS mode) (default True)
+        normalize: if True, normalize text via ru-normalizr if installed
 
     Returns:
         bytes: raw signed 8-bit PCM audio at 10 kHz, mono
     """
     if isinstance(text, str):
         if normalize:
-            from ru_normalizr import NormalizeOptions, Normalizer
-            _norm = Normalizer(NormalizeOptions.tts())
-            text = _norm.normalize(text)
+            text = _normalize_text(text)
         text = text.replace("\u0301", "+").encode("koi8-r", errors="replace")
     elif not isinstance(text, bytes):
         raise TypeError("text must be str or bytes")
