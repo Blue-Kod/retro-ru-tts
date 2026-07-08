@@ -46,8 +46,12 @@ def test_abbreviations():
     assert "смотри" in normalize("см.")
 
 def test_urls():
-    assert "ссылка" in normalize("https://example.com")
-    assert "ссылка" in normalize("www.example.com")
+    result = normalize("https://example.com")
+    assert "эксэмпэл" in result
+    assert "ком" in result
+    result2 = normalize("www.example.com")
+    assert "эксэмпэл" in result2
+    assert "ком" in result2
 
 def test_emails():
     assert "электронный адрес" in normalize("test@example.com")

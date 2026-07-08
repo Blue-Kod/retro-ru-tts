@@ -133,7 +133,11 @@ _PHONE_RE = re.compile(
     r"(?<!\w)(?:\+7|8)\s*\(?\d{3}\)?\s*\d{3}\s*-?\s*\d{2}\s*-?\s*\d{2}(?!\w)"
 )
 
-_URL_RE = re.compile(r"https?://[^\s<>\"'()]+|www\.[^\s<>\"'()]+")
+_URL_RE = re.compile(
+    r"https?://[^\s<>\"'()]+"
+    r"|www\.[^\s<>\"'()]+"
+    r"|(?<!\w)[a-zA-Z0-9][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}(?:/[^\s<>\"'()]*)?(?!\w)"
+)
 _EMAIL_RE = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
 
 _ABBR_MAP: Dict[str, str] = {
@@ -239,6 +243,12 @@ _EN_RU_MAP: Dict[str, str] = {
     "info": "инфо", "text": "текст", "list": "лист", "link": "линк", "site": "сайт",
     "chat": "чат", "bot": "бот", "click": "клик", "push": "пуш", "error": "ошибка",
     "okay": "окей", "next": "некст", "back": "бэк", "top": "топ", "time": "тайм",
+    "example": "эксэмпэл", "google": "гугл", "youtube": "ютуб", "mail": "мэйл",
+    "gmail": "джимэйл", "yandex": "яндэкс", "vk": "вэ-ка", "telegram": "тэлеграм",
+    "github": "гитхаб", "gitlab": "гитлаб", "docs": "докс", "maps": "карты",
+    "privet": "привет", "test": "тэст", "api": "апи",
+    "ru": "ру", "su": "су", "com": "ком", "org": "орг", "net": "нет",
+    "gov": "гов", "edu": "эду", "рф": "рф",
 }
 
 _ENGLISH_PATTERNS: Dict[re.Pattern, str] = {
@@ -283,7 +293,21 @@ _MULTI_SPACE_RE = re.compile(r"[ \t]+")
 
 
 def _expand_url(m: re.Match) -> str:
-    return " ссылка "
+    url = m.group(0)
+    rest = url.split("://", 1)[-1]
+    domain = rest.split("/")[0]
+    domain = domain.split("@")[-1]
+    domain = domain.split(":")[0]
+    parts = [p for p in domain.replace("www.", " ").split(".") if p]
+    if not parts:
+        return " ссылка "
+    result = " точка ".join(parts)
+    slash_idx = rest.find("/")
+    if slash_idx >= 0:
+        path = rest[slash_idx + 1:]
+        if path:
+            result += " слэш " + " слэш ".join(path.split("/"))
+    return " " + result + " "
 
 def _expand_email(m: re.Match) -> str:
     return " электронный адрес "
@@ -407,8 +431,8 @@ def normalize(text: str) -> str:
     text = _STRESS_MARK.sub("", text)
     text = _PLUS_MARK.sub(r"\1", text)
 
-    text = _URL_RE.sub(_expand_url, text)
     text = _EMAIL_RE.sub(_expand_email, text)
+    text = _URL_RE.sub(_expand_url, text)
     text = _ABBR_RE.sub(_expand_abbr, text)
 
     text = _ORDINAL_SUFFIX_RE.sub(_expand_ordinal, text)
@@ -430,6 +454,9 @@ def normalize(text: str) -> str:
 
     text = _ABBREV_RE.sub(_expand_abbrev, text)
 
+    text = text.replace("(", " ").replace(")", " ")
+    text = text.replace("[", " ").replace("]", " ")
+    text = text.replace("{", " ").replace("}", " ")
     text = _PUNCT_SPACE_RE.sub(r"\1", text)
     text = _PUNCT_LEAD_RE.sub(r"\1", text)
     text = _MULTI_SPACE_RE.sub(" ", text).strip()
