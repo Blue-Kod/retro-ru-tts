@@ -122,7 +122,8 @@ Otherwise, a built-in normalizer handles the most common cases:
 | Decimals | 3.14 | три запятая одна четыре |
 | Phone | +7 495 123 45 67 | восемь четыре девять пять один два три четыре пять шесть семь |
 | English | hello, world, ok | хэллоу, уорлд, окей |
-| URLs/emails | http://example.com | ссылка / электронный адрес |
+| URLs | example.com/privet | эксэмпэл точка ком слэш привет |
+| Emails | user@example.com | электронный адрес |
 
 ```python
 # Skip normalization for raw PCM output
