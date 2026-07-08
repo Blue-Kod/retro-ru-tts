@@ -15,6 +15,9 @@ generation.
 
 ```bash
 pip install retro-ru-tts
+
+# Optional: ru-normalizr for advanced normalization (Python ≥ 3.10)
+pip install retro-ru-tts[normalize]
 ```
 
 ```python
@@ -94,13 +97,35 @@ To use the female voice without decimal comma: `flags=5` (`DEC_SEP_POINT \| USE_
 
 ## Text normalization
 
-By default the input text is normalized via
-[ru-normalizr](https://pypi.org/project/ru-normalizr/) in TTS mode before being
-fed to the synthesizer. This converts numbers to words, formats dates, handles
-cases, transliterates English words, etc.
+By default the input text is normalized before being fed to the synthesizer.
+This converts numbers to words, formats dates and times, expands abbreviations,
+spells out uppercase acronyms letter by letter, transliterates common English
+words, and cleans up punctuation.
+
+If [ru-normalizr](https://pypi.org/project/ru-normalizr/) is installed
+(`pip install retro-ru-tts[normalize]`), it is used for normalization.
+Otherwise, a built-in normalizer handles the most common cases:
+
+| Feature | Example | Output |
+|---|---|---|
+| Stress marks | ко́фе | кофе |
+| Numbers | 1234567 | один миллион двести тридцать четыре тысячи пятьсот шестьдесят семь |
+| Dates | 15.03.2024 | пятнадцатое марта две тысячи двадцать четыре года |
+| Time | 14:30 | четырнадцать тридцать |
+| Units | 5 кг, 100 мл | пять килограмм, сто миллилитров |
+| Temperature | -5 °C | минус пять градусов по Цельсию |
+| Currency | 300 руб., 50$ | триста рублей, пятьдесят долларов |
+| Symbols | 100%, №5 | сто процентов, номер пять |
+| Abbreviations | т.д., т.е., напр. | так далее, то есть, например |
+| Acronyms | TTS, РФ, USB | тэ тэ эс, эр эф, у эс бэ |
+| Ordinals | 1-й, 3-я | первый, третья |
+| Decimals | 3.14 | три запятая одна четыре |
+| Phone | +7 495 123 45 67 | восемь четыре девять пять один два три четыре пять шесть семь |
+| English | hello, world, ok | хэллоу, уорлд, окей |
+| URLs/emails | http://example.com | ссылка / электронный адрес |
 
 ```python
-# Skip normalization for raw KOI8-R PCM output
+# Skip normalization for raw PCM output
 retro_ru_tts.synthesize("Версия 3.2", normalize=False)
 ```
 
