@@ -1,6 +1,6 @@
 # retro-ru-tts
 
-[Читать на русском](README_RU.md)
+[Читать на русском](README_RU.md) | [GitHub](https://github.com/Blue-Kod/retro-ru-tts)
 
 Python wrapper for the [ru_tts](https://github.com/poretsky/ru_tts) speech
 synthesizer — a compact, portable Russian TTS engine written in pure C.
@@ -123,7 +123,7 @@ retro_ru_tts.synthesize("Версия 3.2", normalize=False)
 ### Steps
 
 ```bash
-git clone https://github.com/your/repo.git
+git clone https://github.com/Blue-Kod/retro-ru-tts.git
 cd retro-ru-tts
 
 # Development install (editable)

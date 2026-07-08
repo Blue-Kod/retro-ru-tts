@@ -120,7 +120,7 @@ retro_ru_tts.synthesize("Версия 3.2", normalize=False)
 ### Шаги
 
 ```bash
-git clone https://github.com/your/repo.git
+git clone https://github.com/Blue-Kod/retro-ru-tts.git
 cd retro-ru-tts
 
 # Разработка (editable install)

@@ -25,7 +25,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Loginov Andrey",
+    url="https://github.com/Blue-Kod/retro-ru-tts",
     project_urls={
+        "Source": "https://github.com/Blue-Kod/retro-ru-tts",
         "Original repository": "https://github.com/poretsky/ru_tts",
         "Original author": "Igor Poretsky",
     },
