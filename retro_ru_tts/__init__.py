@@ -51,8 +51,11 @@ def _play_pcm(pcm_bytes):
                 tmppath = f.name
             try:
                 subprocess.run(["aplay", tmppath], check=True)
-            except FileNotFoundError:
-                subprocess.run(["paplay", tmppath], check=True)
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                try:
+                    subprocess.run(["paplay", tmppath], check=True)
+                except (FileNotFoundError, subprocess.CalledProcessError):
+                    raise RuntimeError("No audio player found (try: apt install alsa-utils)")
             finally:
                 os.unlink(tmppath)
         else:
